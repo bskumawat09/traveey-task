@@ -9,24 +9,24 @@ import { Task, TaskDoc } from './schema/task.schema';
 export class TaskService {
   constructor(@InjectModel(Task.name) private taskModel: Model<TaskDoc>) {}
 
-  create(createTaskDto: CreateTaskDto): Promise<Task> {
+  createTask(createTaskDto: CreateTaskDto): Promise<Task> {
     const task = new this.taskModel(createTaskDto);
     return task.save();
   }
 
-  findAll(): Promise<Task[]> {
+  findAllTasks(): Promise<Task[]> {
     return this.taskModel.find();
   }
 
-  findOne(id: string): Promise<Task> {
+  findTaskById(id: string): Promise<Task> {
     return this.taskModel.findById(id);
   }
 
-  update(id: string, updateTaskDto: UpdateTaskDto) {
+  updateTask(id: string, updateTaskDto: UpdateTaskDto) {
     return this.taskModel.findByIdAndUpdate(id, updateTaskDto, { new: true });
   }
 
-  remove(id: string) {
+  removeTask(id: string) {
     return this.taskModel.findByIdAndDelete(id);
   }
 

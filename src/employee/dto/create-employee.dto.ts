@@ -1,10 +1,10 @@
 import {
   IsNotEmpty,
-  IsDate,
   IsEmail,
   IsPhoneNumber,
   IsString,
   IsOptional,
+  IsDateString,
 } from 'class-validator';
 
 export class CreateEmployeeDto {
@@ -20,7 +20,7 @@ export class CreateEmployeeDto {
   @IsPhoneNumber()
   phone: string;
 
-  @IsDate()
+  @IsDateString()
   @IsOptional()
   hireDate: Date;
 

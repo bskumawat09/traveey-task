@@ -11,26 +11,28 @@ export class EmployeeService {
     @InjectModel(Employee.name) private employeeModel: Model<EmployeeDoc>,
   ) {}
 
-  async create(createEmployeeDto: CreateEmployeeDto): Promise<Employee> {
+  async createEmployee(
+    createEmployeeDto: CreateEmployeeDto,
+  ): Promise<Employee> {
     const employee = new this.employeeModel(createEmployeeDto);
     return employee.save();
   }
 
-  findAll(): Promise<Employee[]> {
+  findAllEmployees(): Promise<Employee[]> {
     return this.employeeModel.find();
   }
 
-  findOne(id: string): Promise<Employee> {
+  findEmployeeById(id: string): Promise<Employee> {
     return this.employeeModel.findById(id);
   }
 
-  update(id: string, updateEmployeeDto: UpdateEmployeeDto) {
+  updateEmployee(id: string, updateEmployeeDto: UpdateEmployeeDto) {
     return this.employeeModel.findByIdAndUpdate(id, updateEmployeeDto, {
       new: true,
     });
   }
 
-  remove(id: string) {
+  removeEmployee(id: string) {
     return this.employeeModel.findByIdAndDelete(id);
   }
 }

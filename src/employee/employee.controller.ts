@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
@@ -20,35 +22,57 @@ export class EmployeeController {
   ) {}
 
   @Post()
-  create(@Body() createEmployeeDto: CreateEmployeeDto) {
-    return this.employeeService.create(createEmployeeDto);
+  async createEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
+    try {
+      const employee = await this.employeeService.createEmployee(
+        createEmployeeDto,
+      );
+      return employee;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get()
-  findAll() {
-    return this.employeeService.findAll();
+  findAllEmployees() {
+    return this.employeeService.findAllEmployees();
   }
 
   @Get(':employeeId')
-  findOne(@Param('employeeId') id: string) {
-    return this.employeeService.findOne(id);
+  async findEmployeeById(@Param('employeeId') id: string) {
+    const employee = await this.employeeService.findEmployeeById(id);
+    if (!employee)
+      throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+
+    return employee;
   }
 
   @Patch(':employeeId')
-  update(
+  async updateEmployee(
     @Param('employeeId') id: string,
     @Body() updateEmployeeDto: UpdateEmployeeDto,
   ) {
-    return this.employeeService.update(id, updateEmployeeDto);
+    const employee = await this.employeeService.updateEmployee(
+      id,
+      updateEmployeeDto,
+    );
+    if (!employee)
+      throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+
+    return employee;
   }
 
   @Delete(':employeeId')
-  remove(@Param('employeeId') id: string) {
-    return this.employeeService.remove(id);
+  removeEmployee(@Param('employeeId') id: string) {
+    return this.employeeService.removeEmployee(id);
   }
 
   @Get('/:employeeId/tasks')
-  findAllTasksOfEmployee(@Param('employeeId') id: string) {
+  async findAllTasksOfEmployee(@Param('employeeId') id: string) {
+    const employee = await this.employeeService.findEmployeeById(id);
+    if (!employee)
+      throw new HttpException('Employee not found', HttpStatus.NOT_FOUND);
+
     return this.taskService.findAllTasksOfEmployee(id);
   }
 }
